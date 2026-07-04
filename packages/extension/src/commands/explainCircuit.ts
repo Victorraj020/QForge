@@ -12,8 +12,14 @@ import { Commands } from '../shared/constants';
 
 export function registerExplainCircuit(container: QForgeContainer): vscode.Disposable {
   return vscode.commands.registerCommand(Commands.EXPLAIN_CIRCUIT, async () => {
-    const editor = vscode.window.activeTextEditor;
+    let editor = vscode.window.activeTextEditor;
     if (!editor || editor.document.languageId !== 'python') {
+      editor = vscode.window.visibleTextEditors.find(
+        (e) => e.document.languageId === 'python',
+      );
+    }
+
+    if (!editor) {
       vscode.window.showInformationMessage(
         'QForge: Open a Python file with a QuantumCircuit to use Explain Circuit.',
       );

@@ -16,9 +16,13 @@ Each method is handled by a dedicated module. Adding a new method:
 from __future__ import annotations
 
 import sys
+import os
 import json
 import logging
 from typing import Any, Callable
+
+# Add parent directory to sys.path so that 'qforge' package can be imported when run directly
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from qforge.protocol import (
     JsonRpcRequest,

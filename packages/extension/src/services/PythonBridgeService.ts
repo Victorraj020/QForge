@@ -86,9 +86,17 @@ export class PythonBridgeService implements vscode.Disposable {
     this.outputChannel.appendLine(`[QForge] Starting Python server: ${pythonPath} ${serverScript}`);
 
     return new Promise((resolve, reject) => {
+      const pythonParentDir = path.dirname(path.dirname(serverScript));
+      const env = {
+        ...process.env,
+        PYTHONPATH: process.env.PYTHONPATH
+          ? `${pythonParentDir}${path.delimiter}${process.env.PYTHONPATH}`
+          : pythonParentDir,
+      };
+
       const proc = cp.spawn(pythonPath, [serverScript], {
         stdio: ['pipe', 'pipe', 'pipe'],
-        env: { ...process.env },
+        env,
       });
 
       this.process = proc;

@@ -3,7 +3,7 @@
   "displayName": "QForge — Quantum Developer Tools",
   "description": "Live circuit preview, hover documentation, timeline, and intelligent analysis for Qiskit quantum computing.",
   "version": "0.1.0",
-  "publisher": "qforge",
+  "publisher": "victorraj020",
   "author": "Victorraj",
   "license": "MIT",
   "engines": {

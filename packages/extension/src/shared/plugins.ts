@@ -77,6 +77,7 @@ export interface ExecutionResult {
   readonly counts: Record<string, number>;
   readonly statevector?: readonly number[][];
   readonly provider: string;
+  readonly executionTimeMs: number;
 }
 
 /**
@@ -93,3 +94,26 @@ export interface ExecutionProvider {
 
   execute(gate: GateOp[], options: ExecutionOptions): Promise<ExecutionResult>;
 }
+
+// ---------------------------------------------------------------------------
+// Debugger contracts (Phase 3)
+// ---------------------------------------------------------------------------
+
+export interface Amplitude {
+  readonly state: string;        // e.g. "00", "01"
+  readonly re: number;           // Real part
+  readonly im: number;           // Imaginary part
+  readonly probability: number;  // Amplitude squared (|amp|^2)
+  readonly phase: number;        // Phase in radians (-pi to pi)
+}
+
+export interface DebugStep {
+  readonly gateIndex: number;    // Index of gate just executed (-1 for initial state)
+  readonly statevector: readonly Amplitude[];
+}
+
+export interface DebugResult {
+  readonly steps: readonly DebugStep[];
+  readonly error?: string;
+}
+

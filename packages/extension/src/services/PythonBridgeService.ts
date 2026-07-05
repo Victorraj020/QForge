@@ -209,6 +209,10 @@ export class PythonBridgeService implements vscode.Disposable {
       if (!trimmed) {
         continue;
       }
+      if (trimmed === 'READY') {
+        this.outputChannel.appendLine('[QForge] Received ready signal from Python server.');
+        continue;
+      }
       try {
         const response = JSON.parse(trimmed) as JsonRpcResponse;
         this.handleResponse(response);
@@ -243,7 +247,7 @@ export class PythonBridgeService implements vscode.Disposable {
     if (configured.trim()) {
       return configured.trim();
     }
-    // Fall back to the Python extension's selected interpreter, then system python.
+    // Fall back to the Python extension's selected interpreter, then standard Windows user install paths.
     const pythonExt = vscode.extensions.getExtension('ms-python.python');
     if (pythonExt?.isActive) {
       const api = pythonExt.exports as { settings?: { getExecutionDetails?: () => { execCommand?: string[] } } };
@@ -253,6 +257,27 @@ export class PythonBridgeService implements vscode.Disposable {
         return execCommand[0];
       }
     }
+
+    if (process.platform === 'win32') {
+      const localAppData = process.env.LOCALAPPDATA || (process.env.USERPROFILE ? path.join(process.env.USERPROFILE, 'AppData', 'Local') : null);
+      if (localAppData) {
+        const programsDir = path.join(localAppData, 'Programs', 'Python');
+        if (fs.existsSync(programsDir)) {
+          try {
+            const dirs = fs.readdirSync(programsDir);
+            for (const dir of dirs) {
+              const candidate = path.join(programsDir, dir, 'python.exe');
+              if (fs.existsSync(candidate)) {
+                return candidate;
+              }
+            }
+          } catch {
+            // ignore listing errors
+          }
+        }
+      }
+    }
+
     return 'python';
   }
 }

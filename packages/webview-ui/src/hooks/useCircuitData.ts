@@ -13,7 +13,7 @@ import { useCircuitStore } from '../store/circuitStore';
 
 export function useCircuitData(): void {
   const message = useVSCodeMessage();
-  const { setCircuit, setAnalysis } = useCircuitStore();
+  const { setCircuit, setAnalysis, setSimulationResult, setIsSimulating, setDebugResult } = useCircuitStore();
   const { setLoading, setError, clearError } = useUIStore();
 
   useEffect(() => {
@@ -34,12 +34,26 @@ export function useCircuitData(): void {
         setAnalysis(message.payload);
         break;
 
+      case 'SIMULATION_RESULT':
+        clearError();
+        setLoading(false);
+        setSimulationResult(message.payload);
+        setIsSimulating(false);
+        break;
+
+      case 'DEBUG_STATES_UPDATED':
+        clearError();
+        setLoading(false);
+        setDebugResult(message.payload);
+        break;
+
       case 'LOADING':
         setLoading(true, message.payload.operation);
         break;
 
       case 'ERROR':
         setLoading(false);
+        setIsSimulating(false);
         setError(message.payload.message, message.payload.suggestion);
         break;
 

@@ -135,7 +135,7 @@ function parseGateArgs(
 
   for (const arg of args) {
     // Remove any list brackets and try to parse as integer (qubit index)
-    const cleaned = arg.replace(/[\[\]]/g, '').trim();
+    const cleaned = arg.replace(/\[|\]/g, '').trim();
     const asInt = parseInt(cleaned, 10);
     if (!isNaN(asInt)) {
       qubits.push(asInt);

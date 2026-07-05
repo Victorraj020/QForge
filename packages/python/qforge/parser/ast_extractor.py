@@ -16,6 +16,7 @@ from __future__ import annotations
 import ast
 import uuid
 import logging
+import math
 from typing import Any, Optional
 
 log = logging.getLogger(__name__)
@@ -54,9 +55,41 @@ def _extract_int(node: ast.expr) -> Optional[int]:
 
 
 def _extract_float(node: ast.expr) -> Optional[float]:
-    """Safely extract a numeric constant (int or float) from an AST node."""
+    """Safely extract a numeric constant (int or float) or math expression from an AST node."""
     if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
         return float(node.value)
+    
+    if isinstance(node, ast.Name):
+        if node.id.lower() == "pi":
+            return math.pi
+    
+    if isinstance(node, ast.Attribute):
+        if isinstance(node.value, ast.Name) and node.value.id == "math" and node.attr == "pi":
+            return math.pi
+
+    if isinstance(node, ast.UnaryOp):
+        operand = _extract_float(node.operand)
+        if operand is not None:
+            if isinstance(node.op, ast.USub):
+                return -operand
+            elif isinstance(node.op, ast.UAdd):
+                return operand
+
+    if isinstance(node, ast.BinOp):
+        left = _extract_float(node.left)
+        right = _extract_float(node.right)
+        if left is not None and right is not None:
+            if isinstance(node.op, ast.Add):
+                return left + right
+            elif isinstance(node.op, ast.Sub):
+                return left - right
+            elif isinstance(node.op, ast.Mult):
+                return left * right
+            elif isinstance(node.op, ast.Div):
+                return left / right if right != 0 else 0.0
+            elif isinstance(node.op, ast.Pow):
+                return left ** right
+
     return None
 
 

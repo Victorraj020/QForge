@@ -34,6 +34,8 @@ from qforge.protocol import (
     INTERNAL_ERROR,
 )
 from qforge.analyzer.circuit_analyzer import handle_analyze_circuit
+from qforge.simulator.local_runner import handle_run_simulator
+from qforge.debugger.step_engine import handle_step_circuit
 
 # ---------------------------------------------------------------------------
 # Logging — goes to stderr so it doesn't pollute the stdout JSON-RPC stream
@@ -55,6 +57,8 @@ Handler = Callable[[Any], Any]
 
 HANDLERS: dict[str, Handler] = {
     "analyzeCircuit": handle_analyze_circuit,
+    "runSimulator": handle_run_simulator,
+    "debugStepCircuit": handle_step_circuit,
 }
 
 
@@ -109,6 +113,7 @@ def main() -> None:
     log.info("QForge Python server starting. Python %s", sys.version.split()[0])
 
     # Signal readiness by flushing stdout (TypeScript side resolves startup promise on first data)
+    sys.stdout.write("READY\n")
     sys.stdout.flush()
 
     try:

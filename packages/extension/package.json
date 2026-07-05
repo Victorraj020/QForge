@@ -38,6 +38,12 @@
         "title": "Restart Python Server",
         "category": "QForge",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "qforge.runSimulation",
+        "title": "Run Quantum Simulation",
+        "category": "QForge",
+        "icon": "$(play)"
       }
     ],
     "configuration": {

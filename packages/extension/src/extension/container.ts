@@ -62,7 +62,7 @@ export function createContainer(context: vscode.ExtensionContext): QForgeContain
   const circuitAnalysis = new CircuitAnalysisService(pythonBridge, webviewMessages, outputChannel);
 
   // --- Layer 3: Panels (depend on services)
-  const circuitPreviewPanel = new CircuitPreviewPanel(context, webviewMessages, outputChannel);
+  const circuitPreviewPanel = new CircuitPreviewPanel(context, webviewMessages, pythonBridge, outputChannel);
   const timelinePanel = new TimelinePanel(context, webviewMessages, outputChannel);
   const explainPanel = new ExplainPanel(context, webviewMessages, outputChannel);
 

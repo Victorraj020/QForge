@@ -22,6 +22,7 @@ export const Commands = {
   OPEN_TIMELINE: 'qforge.openTimeline',
   EXPLAIN_CIRCUIT: 'qforge.explainCircuit',
   RESTART_SERVER: 'qforge.restartServer',
+  RUN_SIMULATION: 'qforge.runSimulation',
 } as const;
 
 export type CommandId = (typeof Commands)[keyof typeof Commands];

@@ -10,7 +10,7 @@
  * Commands and providers call this service; they don't touch the parser or bridge directly.
  */
 
-import * as vscode from 'vscode';
+import type * as vscode from 'vscode';
 import { v4 as uuidv4 } from 'uuid';
 import { detectCircuits } from '../parser/CircuitDetector';
 import { extractGateCalls } from '../parser/GateCallExtractor';

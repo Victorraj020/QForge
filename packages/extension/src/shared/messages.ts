@@ -12,6 +12,7 @@
 import type { CircuitIR } from './CircuitIR';
 import type { GateDoc } from './GateDoc';
 import type { AnalysisResult } from './AnalysisResult';
+import type { ExecutionResult, DebugResult } from './plugins';
 
 // ---------------------------------------------------------------------------
 // Extension Host → Webview messages
@@ -23,12 +24,20 @@ export type ExtensionMessage =
       readonly payload: CircuitIR;
     }
   | {
+      readonly type: 'SIMULATION_RESULT';
+      readonly payload: ExecutionResult;
+    }
+  | {
       readonly type: 'ANALYSIS_RESULT';
       readonly payload: AnalysisResult;
     }
   | {
       readonly type: 'GATE_DOC';
       readonly payload: GateDoc;
+    }
+  | {
+      readonly type: 'DEBUG_STATES_UPDATED';
+      readonly payload: DebugResult;
     }
   | {
       readonly type: 'ERROR';
@@ -74,11 +83,13 @@ export type WebviewMessage =
     }
   | {
       readonly type: 'REQUEST_SIMULATOR_RUN';
-      /** Phase 2 — defined now so the plugin contract is stable. */
-      readonly payload?: {
+      readonly payload: {
         readonly shots: number;
         readonly seed?: number | undefined;
-      } | undefined;
+      };
+    }
+  | {
+      readonly type: 'REQUEST_DEBUG_STATES';
     };
 
 // ---------------------------------------------------------------------------

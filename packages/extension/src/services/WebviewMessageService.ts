@@ -6,11 +6,12 @@
  * visible panels — services never reference specific panel implementations.
  */
 
-import * as vscode from 'vscode';
+import type * as vscode from 'vscode';
 import type { ExtensionMessage } from '../shared/messages';
 import type { CircuitIR } from '../shared/CircuitIR';
 import type { AnalysisResult } from '../shared/AnalysisResult';
 import type { GateDoc } from '../shared/GateDoc';
+import type { ExecutionResult } from '../shared/plugins';
 
 export interface WebviewPanel {
   readonly panelId: string;
@@ -37,6 +38,10 @@ export class WebviewMessageService implements vscode.Disposable {
 
   sendAnalysisResult(result: AnalysisResult): void {
     this.broadcast({ type: 'ANALYSIS_RESULT', payload: result });
+  }
+
+  sendSimulationResult(result: ExecutionResult): void {
+    this.broadcast({ type: 'SIMULATION_RESULT', payload: result });
   }
 
   sendGateDoc(doc: GateDoc): void {
